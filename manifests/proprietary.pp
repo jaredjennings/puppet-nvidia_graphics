@@ -45,7 +45,10 @@ class nvidia_graphics::proprietary(
 #
 # Nowadays, graphical boot is common because it looks slick, but for this
 # purpose it gets in our way. Turn it off:
-    include grub::rhgb::no
+    kernel_parameter { "rhgb":
+      ensure => absent,
+    }
+
 
 # The driver builds some adapter code, then links it with the proprietary
 # driver code to arrive at a kernel module. To do this, it needs the C
@@ -101,7 +104,12 @@ class nvidia_graphics::proprietary(
     if $::using_nouveau_driver == 'true' {
 
 # Change the GRUB config to prevent the initrd from loading the Nouveau driver.
-      include grub::nouveau::no
+# N.B. If you need to blacklist other things, this may trample that.
+      kernel_parameter { "rdblacklist":
+        ensure => present,
+        value => "nouveau",
+      }
+
 
 # Prevent the system after boot from automatically loading Nouveau.
       file { '/etc/modprobe.d/disable-nouveau.conf':
