@@ -32,7 +32,7 @@
 # installed, but never yet booted, the video driver will need to be reinstalled
 # without reference to the network.
 
-class nvidia::proprietary($installer_dir) {
+class nvidia_graphics::proprietary($installer_dir) {
 
     if $::has_nvidia_graphics_card == 'true' {
 
