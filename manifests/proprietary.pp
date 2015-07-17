@@ -32,7 +32,10 @@
 # installed, but never yet booted, the video driver will need to be reinstalled
 # without reference to the network.
 
-class nvidia_graphics::proprietary($installer_dir) {
+class nvidia_graphics::proprietary(
+  $installer_dir,
+  $using_auditable_sudo=true,
+) {
 
     if $::has_nvidia_graphics_card == 'true' {
 
@@ -110,11 +113,13 @@ options nouveau modeset=0\n",
         }
 
 # Let admins sudo to run the driver installer manually if need be.
-        sudo::auditable::command_alias { 'NVIDIA_DRIVERS':
+        if $using_auditable_sudo == true {
+          sudo::auditable::command_alias { 'NVIDIA_DRIVERS':
             type => 'exec',
             commands => [
-                "${installer_dir}/NVIDIA*.run",
-                ],
+                         "${installer_dir}/NVIDIA*.run",
+                         ],
+          }
         }
     }
 }
