@@ -37,7 +37,7 @@ class nvidia_graphics::proprietary(
   $using_auditable_sudo=true,
 ) {
 
-    if $::has_nvidia_graphics_card == 'true' {
+  if $::has_nvidia_graphics_card == 'true' {
 
 # The NVIDIA driver must be installed when X is not running. Rather than figure
 # out how to safely kill the X server and boot the console user off, we just
@@ -45,82 +45,82 @@ class nvidia_graphics::proprietary(
 #
 # Nowadays, graphical boot is common because it looks slick, but for this
 # purpose it gets in our way. Turn it off:
-        include grub::rhgb::no
+    include grub::rhgb::no
 
 # The driver builds some adapter code, then links it with the proprietary
 # driver code to arrive at a kernel module. To do this, it needs the C
 # compiler, and the kernel development files.
-        package { [
-                'gcc',
-                'kernel-devel',
-            ]:
-            ensure => present,
-        }
-        require common_packages::make
+    package { [
+               'gcc',
+               'kernel-devel',
+               ]:
+      ensure => present,
+    }
+    require common_packages::make
 
 # Now install the init script.
-        file { "/etc/rc.d/init.d/nvidia-rebuild":
-            owner => root, group => 0, mode => 0755,
-            content => template('nvidia/nvidia-rebuild.sh.erb'),
+    file { "/etc/rc.d/init.d/nvidia-rebuild":
+      owner => root, group => 0, mode => 0755,
+      content => template('nvidia/nvidia-rebuild.sh.erb'),
 # If the X server is not installed before the proprietary NVIDIA driver, the
 # driver won't install all of its files properly.
-            require => Package['xorg-x11-server-Xorg'],
-        }
+      require => Package['xorg-x11-server-Xorg'],
+    }
 
 # With the script installed the service can be added.
-        exec { 'add_nvidia_rebuild_service':
-            command => '/sbin/chkconfig --add nvidia-rebuild',
-            refreshonly => true,
-            subscribe => File['/etc/rc.d/init.d/nvidia-rebuild'],
-        }
+    exec { 'add_nvidia_rebuild_service':
+      command => '/sbin/chkconfig --add nvidia-rebuild',
+      refreshonly => true,
+      subscribe => File['/etc/rc.d/init.d/nvidia-rebuild'],
+    }
 
 # The init script defines an \verb!nvidia-rebuild! service; enable it so it
 # will be started at boot. We don't want to start it immediately: if this isn't
 # boot time, there's most likely an X server running, so it would fail.
-        service { 'nvidia-rebuild':
-            enable => true,
-            require => [
-                File['/etc/rc.d/init.d/nvidia-rebuild'],
-                Exec['add_nvidia_rebuild_service'],
-            ],
-        }
+    service { 'nvidia-rebuild':
+      enable => true,
+      require => [
+                  File['/etc/rc.d/init.d/nvidia-rebuild'],
+                  Exec['add_nvidia_rebuild_service'],
+                  ],
+    }
 
 # Place an X configuration file so that X will use the nvidia driver. In order
 # to allow further configuration, like TwinView or rotated displays, we won't
 # replace the configuration if it's already there.
-        file { '/etc/X11/xorg.conf.d/01-nvidia.conf':
-            owner => root, group => 0, mode => 0644,
-            replace => false,
-            source => "puppet:///modules/nvidia/01-nvidia.conf",
+    file { '/etc/X11/xorg.conf.d/01-nvidia.conf':
+      owner => root, group => 0, mode => 0644,
+      replace => false,
+      source => "puppet:///modules/nvidia/01-nvidia.conf",
 # The xorg.conf.d directory is provided by this X server package. (And maybe
 # others.)
-            require => Class['xserver'],
-        }
+      require => Class['xserver'],
+    }
 
 # The NVIDIA proprietary driver will not install if the Nouveau driver is in
 # use. So to install the proprietary driver we must disable the Nouveau driver:
-        if $::using_nouveau_driver == 'true' {
+    if $::using_nouveau_driver == 'true' {
 
 # Change the GRUB config to prevent the initrd from loading the Nouveau driver.
-            include grub::nouveau::no
+      include grub::nouveau::no
 
 # Prevent the system after boot from automatically loading Nouveau.
-            file { '/etc/modprobe.d/disable-nouveau.conf':
-                owner => root, group => 0, mode => 0644,
-                content => "blacklist nouveau\n\
-options nouveau modeset=0\n",
-            }
-        }
+      file { '/etc/modprobe.d/disable-nouveau.conf':
+        owner => root, group => 0, mode => 0644,
+        content => "blacklist nouveau\n\
+        options nouveau modeset=0\n",
+      }
+    }
 
 # Let admins sudo to run the driver installer manually if need be.
-        if $using_auditable_sudo == true {
-          sudo::auditable::command_alias { 'NVIDIA_DRIVERS':
-            type => 'exec',
-            commands => [
-                         "${installer_dir}/NVIDIA*.run",
-                         ],
-          }
-        }
+    if $using_auditable_sudo == true {
+      sudo::auditable::command_alias { 'NVIDIA_DRIVERS':
+        type => 'exec',
+        commands => [
+                     "${installer_dir}/NVIDIA*.run",
+                     ],
+      }
     }
+  }
 }
 
