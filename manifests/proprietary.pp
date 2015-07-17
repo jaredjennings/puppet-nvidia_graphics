@@ -65,14 +65,13 @@ class nvidia_graphics::proprietary(
 # If the X server is not installed before the proprietary NVIDIA driver, the
 # driver won't install all of its files properly.
       require => Package['xorg-x11-server-Xorg'],
-    }
+    } ->
 
 # With the script installed the service can be added.
     exec { 'add_nvidia_rebuild_service':
       command => '/sbin/chkconfig --add nvidia-rebuild',
       refreshonly => true,
-      subscribe => File['/etc/rc.d/init.d/nvidia-rebuild'],
-    }
+    } ->
 
 # The init script defines an \verb!nvidia-rebuild! service; enable it so it
 # will be started at boot. We don't want to start it immediately: if this isn't
