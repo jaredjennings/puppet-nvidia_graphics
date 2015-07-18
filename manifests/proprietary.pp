@@ -54,11 +54,11 @@ class nvidia_graphics::proprietary(
 # driver code to arrive at a kernel module. To do this, it needs the C
 # compiler, and the kernel development files.
     package { [
-               'gcc',
                'kernel-devel',
                ]:
       ensure => present,
     }
+    require gcc
     require make
 
 # Now install the init script.
