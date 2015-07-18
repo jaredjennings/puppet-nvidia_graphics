@@ -59,7 +59,7 @@ class nvidia_graphics::proprietary(
                ]:
       ensure => present,
     }
-    require common_packages::make
+    require make
 
 # Now install the init script.
     file { "/etc/rc.d/init.d/nvidia-rebuild":
