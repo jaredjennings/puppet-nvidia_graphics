@@ -21,6 +21,8 @@
 	  "version_requirement": ">=0.0.5" },
 	{ "name": "puppetlabs/gcc",
 	  "version_requirement": ">=0.3.0 <0.4.0" },
+	{ "name": "jaredjennings/build_kernel_modules",
+	  "version_requirement": ">=0.1.0" }
     ]
 }
 

@@ -53,13 +53,8 @@ class nvidia_graphics::proprietary(
 # The driver builds some adapter code, then links it with the proprietary
 # driver code to arrive at a kernel module. To do this, it needs the C
 # compiler, and the kernel development files.
-    package { [
-               'kernel-devel',
-               ]:
-      ensure => present,
-    }
-    require gcc
-    require make
+    class { 'build_kernel_modules':
+    } ->
 
 # Now install the init script.
     file { "/etc/rc.d/init.d/nvidia-rebuild":
