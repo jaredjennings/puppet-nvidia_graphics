@@ -128,6 +128,10 @@ class nvidia_graphics::proprietary(
                      ],
       }
     }
+  } else {
+    file { '/etc/X11/xorg.conf.d/01-nvidia.conf':
+      ensure => absent,
+    }
   }
 }
 
