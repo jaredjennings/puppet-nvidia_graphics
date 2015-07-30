@@ -105,9 +105,11 @@ The complete set of driver installers that may be expected in the
 installer dir is:
 
 * latest-x86_64
+* legacy-340-x86_64
 * legacy-304-x86_64
 * legacy-17314-x86_64
 * latest-i386
+* legacy-340-i386
 * legacy-304-i386
 * legacy-17314-i386
 
@@ -137,6 +139,9 @@ All booleans.
 
 * `has_nvidia_graphics_card`: Whether this host has any NVIDIA
   graphics hardware.
+
+* `has_nvidia_legacy_340_graphics_card`: Whether this host has a card
+  which requires a 340.x (and no newer) NVIDIA driver.
 
 * `has_nvidia_legacy_304_graphics_card`: Whether this host has a card
   which requires a 304.x (and no newer) NVIDIA driver.
