@@ -20,15 +20,14 @@ require 'find'
 # for how to also detect legacy nVidia cards.
 #
 
-NVIDIA_PCI_VENDOR_ID = "0x10de"
-VIDEO_CARD_CLASS = "0x030000"
-PCI_DEVICES = '/sys/bus/pci/devices'
-
 def nvidia_graphics_card_device_dirs
-    Dir.glob(File.join(PCI_DEVICES,'*')).select do |device_dir|
+    nvidia_pci_vendor_id = '0x10de'
+    video_card_class = '0x030000'
+    pci_devices = '/sys/bus/pci/devices'
+    Dir.glob(File.join(pci_devices,'*')).select do |device_dir|
         vendor = File.read(File.join(device_dir, 'vendor')).strip
         class_ = File.read(File.join(device_dir, 'class')).strip
-        vendor == NVIDIA_PCI_VENDOR_ID and class_ == VIDEO_CARD_CLASS
+        vendor == nvidia_pci_vendor_id and class_ == video_card_class
     end
 end
 
