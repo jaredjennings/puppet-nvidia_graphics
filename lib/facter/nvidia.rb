@@ -136,8 +136,34 @@ end
 Facter.add("nvidia_glx_extension_installed") do
     confine :kernel => "Linux"
     setcode do
-        # stub
-        # Something in /usr/lib{,64}/xorg.
-        true
+        oldcwd = Dir.pwd
+        Dir.chdir('/usr/lib64/xorg/modules/extensions')
+        filename = 'libglx.so'
+        seen = ['libglx.so']
+        # Follow symlinks until we reach a loop, a non-symlink
+        # (EINVAL), or a broken link (ENOENT); final destination will
+        # be in filename.
+        while true
+          begin
+            filename = File.readlink(filename)
+            break if seen.include? filename
+            seen << filename
+          rescue Errno::EINVAL, Errno::ENOENT
+            break
+          end
+        end
+        Dir.chdir(oldcwd)
+        # filename should now be something like 'libglx.so.331.67'. If
+        # it is not, perhaps libglx.so 
+        if filename =~ /libglx\.so\.([0-9]+)(\.[0-9]+)*/
+          major = $1
+          major.to_i >= 150
+        else
+          # it didn't have those numbers at the end. perhaps it was
+          # not a symlink, and perhaps this is because an X server
+          # upgrade overwrote it. in any case this is not the nvidia
+          # glx extension.
+          false
+        end
     end
 end
