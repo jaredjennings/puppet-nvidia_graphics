@@ -195,4 +195,6 @@ The module is made available under the Apache 2.0 license.
 
 ##Release Notes/Contributors/Etc **Optional**
 
+*0.3* Filled in the code for the `nvidia_glx_extension_installed` fact, which was previously a stub; got rid of possible warnings about redefined constants.
+
 *0.2* Added a new legacy category: support for using a 340.xx driver (and no newer) where necessary.
