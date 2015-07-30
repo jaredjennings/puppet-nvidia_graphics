@@ -63,6 +63,9 @@ start () {
                 install=yes
                 message="nvidia.ko not found for kernel $kernel_release"
             fi
+            if [ "$has_nvidia_legacy_340_graphics_card" = "true" ]; then
+                driver_installer=legacy-340-`uname -m`
+            fi
             if [ "$has_nvidia_legacy_304_graphics_card" = "true" ]; then
                 driver_installer=legacy-304-`uname -m`
             fi
