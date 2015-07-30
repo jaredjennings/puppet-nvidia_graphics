@@ -195,4 +195,4 @@ The module is made available under the Apache 2.0 license.
 
 ##Release Notes/Contributors/Etc **Optional**
 
-If you aren't using changelog, put your release notes here (though you should consider using changelog). You may also add any additional sections you feel are necessary or important to include here. Please use the `## ` header. 
+*0.2* Added a new legacy category: support for using a 340.xx driver (and no newer) where necessary.

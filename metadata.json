@@ -1,6 +1,6 @@
 {
     "name": "jaredjennings-nvidia_graphics",
-    "version": "0.1",
+    "version": "0.2",
     "author": "Jared Jennings",
     "license": "Apache-2.0",
     "summary": "Install and maintain NVIDIA graphics drivers",
